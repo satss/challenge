@@ -4,6 +4,7 @@ use challenge;
 
 create table  if not exists authors (
   id  int unsigned auto_increment primary key,
+  user_name  varchar(20)  not null,
   first_name varchar(20) not null,
   last_name varchar(20) not null,
   created_at timestamp default CURRENT_TIMESTAMP not null,

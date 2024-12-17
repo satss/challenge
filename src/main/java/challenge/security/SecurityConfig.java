@@ -46,7 +46,7 @@ public class SecurityConfig {
                         .requestMatchers("/index.html").permitAll() // Permit all access to /auth/welcome
                         .requestMatchers("/index.htm").permitAll()// Permit all access to /auth/welcome
                         .requestMatchers("/").permitAll() // Permit all access to /auth/welcome
-                        .requestMatchers("/api/v1/quotes/**").authenticated()
+                        .requestMatchers("/api/v1/quotes/**").permitAll()
                 );
         return http.build();
     }

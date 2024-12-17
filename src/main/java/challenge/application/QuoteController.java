@@ -1,18 +1,47 @@
 package challenge.application;
 
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import challenge.domain.Quote;
+import challenge.domain.QuoteService;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/v1/quotes")
 public class QuoteController {
 
-    @PostMapping()
-    private String  registerQuotes(@RequestBody QuoteRequestDto request) {
-        return "hey there a quote is registered";
+    private final QuoteService quoteService;
 
+    public QuoteController(QuoteService quoteService) {
+        this.quoteService = quoteService;
+    }
+
+    @PostMapping()
+    private Quote  registerQuotes(@RequestBody Quote request) {
+        return quoteService.addQuote(request);
+    }
+
+    @GetMapping()
+    private PaginatedResponseDto  getAllQuotes(@RequestParam(name = "page", defaultValue = "0")  Integer page,
+                                 @RequestParam(name = "size", defaultValue = "1") Integer size) {
+        var quotes  = quoteService.getAllQuote(page,size);
+        return new PaginatedResponseDto(quoteService.getAllQuote(page,size).getContent(),
+                quotes.getNumber(), quotes.getNumberOfElements(),
+                quotes.getTotalElements()
+                );
 
     }
+
+    @GetMapping("/authors/{id}")
+    private PaginatedResponseDto getAllQuotesByAuthor(@RequestParam(name = "page", defaultValue = "0")  Integer page,
+                                                              @RequestParam(name = "size", defaultValue = "1") Integer size,
+                                                              @PathVariable Long id) {
+        var quotes  = quoteService.getQuotesByAuthorId(id,page,size);
+
+        return new PaginatedResponseDto(quotes.getContent(),
+                quotes.getNumber(), quotes.getNumberOfElements(),
+                quotes.getTotalElements()
+        );
+
+    }
+
+
 }
