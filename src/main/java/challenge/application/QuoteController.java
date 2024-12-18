@@ -4,6 +4,8 @@ import challenge.domain.Quote;
 import challenge.domain.QuoteService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -20,7 +22,9 @@ public class QuoteController {
 
     @PostMapping()
     private Quote registerQuotes(@RequestBody Quote request) {
-        return quoteService.addQuote(request);
+        UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication()
+                .getPrincipal();
+        return quoteService.addQuote(request, userDetails.getUsername());
     }
 
     @GetMapping()
@@ -38,8 +42,8 @@ public class QuoteController {
     private PaginatedResponseDto getAllQuotesByAuthor(@RequestParam(name = "page", defaultValue = "0") Integer page,
                                                       @RequestParam(name = "size", defaultValue = "1") Integer size,
                                                       @PathVariable Long id) {
-        var quotes = quoteService.getQuotesByAuthorId(id, page, size);
 
+        var quotes = quoteService.getQuotesByAuthorId(id, page, size);
         return new PaginatedResponseDto(quotes.getContent(),
                 quotes.getNumber(), quotes.getNumberOfElements(),
                 quotes.getTotalElements()

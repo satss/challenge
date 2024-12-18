@@ -15,11 +15,10 @@ public class QuoteService {
         this.quoteRepo = quoteRepo;
     }
 
-    public Quote addQuote(Quote quote) {
-        var quotes = new QuoteDB(quote.quote(), 1L);
+    public Quote addQuote(Quote quote, String username) {
+        var quotes = new QuoteDB(quote.quote(), 1L, username);
         var savedQuote = quoteRepo.save(quotes);
-        return new Quote(savedQuote.getQuote());
-
+        return new Quote(savedQuote.getId(), savedQuote.getQuote(), savedQuote.getAuthorUsername());
     }
 
 
