@@ -2,6 +2,7 @@ package challenge.application;
 
 import challenge.domain.Quote;
 import challenge.domain.QuoteService;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -15,11 +16,13 @@ public class QuoteController {
     }
 
     @PostMapping()
+    @PreAuthorize("hasAnyRole('ADMIN')")
     private Quote  registerQuotes(@RequestBody Quote request) {
         return quoteService.addQuote(request);
     }
 
     @GetMapping()
+    @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
     private PaginatedResponseDto  getAllQuotes(@RequestParam(name = "page", defaultValue = "0")  Integer page,
                                  @RequestParam(name = "size", defaultValue = "1") Integer size) {
         var quotes  = quoteService.getAllQuote(page,size);

@@ -3,57 +3,94 @@ package challenge.security;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+
+import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
 @EnableWebSecurity
-@EnableMethodSecurity
 public class SecurityConfig {
 
-    // User Creation
     @Bean
-    public UserDetailsService userDetailsService(PasswordEncoder encoder) {
-        // InMemoryUserDetailsManager setup with two users
-        UserDetails admin = User.withUsername("Fish")
-                .password(encoder.encode("123"))
-                .roles("CREATE", "READ")
+    public InMemoryUserDetailsManager userDetailsService(PasswordEncoder passwordEncoder) {
+
+        UserDetails user = User.withUsername("user")
+                .password(passwordEncoder.encode("password"))
+                .roles("USER")
                 .build();
 
-        UserDetails user = User.withUsername("Tomato")
-                .password(encoder.encode("123"))
-                .roles("USER")
+
+        UserDetails admin = User.withUsername("admin")
+                .password(passwordEncoder.encode("admin"))
+                .roles("USER", "ADMIN")
                 .build();
 
         return new InMemoryUserDetailsManager(admin, user);
     }
 
-    // Configuring HttpSecurity
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http
-                .csrf(AbstractHttpConfigurer::disable) // Disable CSRF for simplicity
-                .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/index.html").permitAll() // Permit all access to /auth/welcome
-                        .requestMatchers("/index.htm").permitAll()// Permit all access to /auth/welcome
-                        .requestMatchers("/").permitAll() // Permit all access to /auth/welcome
-                        .requestMatchers("/api/v1/quotes/**").permitAll()
-                );
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+        return     http.csrf(AbstractHttpConfigurer::disable)
+                .authorizeHttpRequests(request -> request.anyRequest()
+                        .authenticated())
+                .httpBasic(Customizer.withDefaults())
+                .build();
+    }
+
+
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return PasswordEncoderFactories.createDelegatingPasswordEncoder();
+    }
+/**
+
+    @Bean
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+        http.authorizeHttpRequests(expressionInterceptUrlRegistry ->
+                        expressionInterceptUrlRegistry.requestMatchers("/api/v1/quotes/**").permitAll()
+                                .anyRequest().authenticated())
+                .httpBasic(httpSecurityHttpBasicConfigurer ->
+                        httpSecurityHttpBasicConfigurer.authenticationEntryPoint(authenticationEntryPoint));
+        http.addFilterAfter(new CustomFilter(), BasicAuthenticationFilter.class);
         return http.build();
     }
 
-    // Password Encoding
+
+
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
+
+
+    @Bean
+    public UserDetailsManager userDetailsService() {
+        UserDetails user1 = User.withUsername("user1")
+                .password("user")
+                .roles("USER")
+                .build();
+        UserDetails user2 = User.withUsername("admin")
+                .password("ADMIN")
+                .roles("ADMIN")
+                .build();
+        return new InMemoryUserDetailsManager(user1, user2);
+    }
+
+    @Bean
+    public AuthenticationManager authenticationManager(HttpSecurity http) throws Exception {
+        AuthenticationManagerBuilder authenticationManagerBuilder =
+                http.getSharedObject(AuthenticationManagerBuilder.class);
+        authenticationManagerBuilder.userDetailsService(userDetailsService());
+        return authenticationManagerBuilder.build();
+    }
+    **/
 }
