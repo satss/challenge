@@ -1,9 +1,8 @@
-package challenge.application;
+package challenge.quotes.application;
 
-import challenge.domain.Quote;
-import challenge.domain.QuoteService;
+import challenge.quotes.domain.Quote;
+import challenge.quotes.domain.QuoteService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;

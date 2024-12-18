@@ -1,6 +1,6 @@
 package challenge.application;
 
-import challenge.domain.Quote;
+import challenge.quotes.domain.Quote;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;

@@ -1,4 +1,4 @@
-package challenge.domain;
+package challenge.quotes.domain;
 
 
 import com.fasterxml.jackson.annotation.JsonProperty;

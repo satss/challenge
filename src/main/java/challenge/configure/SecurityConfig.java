@@ -1,4 +1,4 @@
-package challenge.security;
+package challenge.configure;
 
 
 import org.springframework.context.annotation.Bean;
@@ -41,9 +41,9 @@ public class SecurityConfig {
         return http.csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(request ->
                         request.requestMatchers(HttpMethod.GET, "api/v1/quotes").
-                                hasAnyRole("QUOTES.ROLE_WRITE", "QUOTES.ROLE_READ").
+                                hasAnyRole(Role.QUOTE_WRITER.getPolicyName(), Role.QUOTE_READER.getPolicyName()).
                                 requestMatchers(HttpMethod.POST, "api/v1/quotes").
-                                hasAnyRole("QUOTES.ROLE_WRITE")
+                                hasAnyRole(Role.QUOTE_WRITER.getPolicyName())
                                 .anyRequest()
                                 .authenticated())
                 .httpBasic(Customizer.withDefaults())

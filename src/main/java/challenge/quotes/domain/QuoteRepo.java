@@ -1,4 +1,4 @@
-package challenge.domain;
+package challenge.quotes.domain;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

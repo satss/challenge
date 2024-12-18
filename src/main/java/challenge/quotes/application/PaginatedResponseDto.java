@@ -1,11 +1,12 @@
-package challenge.application;
+package challenge.quotes.application;
 
-import challenge.domain.QuoteDB;
+import challenge.quotes.domain.QuoteDB;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.List;
 
 public record PaginatedResponseDto(@JsonProperty("quotes") List<QuoteDB> quotes,
                                    @JsonProperty ("current_page_size") int currentPage,
-                                   int pageSize, Long totalItems) {
+                                   @JsonProperty("passed_page_size") int pageSize,
+                                   @JsonProperty("total_no_items") Long totalItems) {
 }
