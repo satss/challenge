@@ -1,5 +1,6 @@
 package challenge.configure;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -9,6 +10,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import java.util.List;
 import java.util.Optional;
 
+@Slf4j
 public class AuthorDetailsService implements UserDetailsService {
     private final AuthorRepo authorRepo;
 
@@ -20,7 +22,8 @@ public class AuthorDetailsService implements UserDetailsService {
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         Optional<Author> authorOptional = authorRepo.findAuthorsByUsername(username);
         if (authorOptional.isEmpty()) {
-            throw new UsernameNotFoundException("User not found for name: " + username);
+            log.error("Author not found for name {}", username);
+            throw new UsernameNotFoundException("Author not found for name: " + username);
         }
 
         Author author = authorOptional.get();

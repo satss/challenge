@@ -22,9 +22,15 @@ public class QuoteController {
 
     @PostMapping()
     public QuoteDto registerQuotes(@RequestBody QuoteDto request) {
-        UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication()
-                .getPrincipal();
-        return quoteService.addQuote(request, userDetails.getUsername());
+        try {
+            UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication()
+                    .getPrincipal();
+            return quoteService.addQuote(request, userDetails.getUsername());
+
+        }catch (Exception e){
+            throw new IllegalStateException("Could not register new quote");
+        }
+
     }
 
     @GetMapping()
