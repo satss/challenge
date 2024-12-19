@@ -1,31 +1,28 @@
 package challenge.configure;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 
-import java.util.Collections;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.Set;
 
-@AllArgsConstructor
+import static challenge.configure.Permission.QUOTE_CREATE;
+import static challenge.configure.Permission.QUOTE_READ;
+
 @Getter
+@RequiredArgsConstructor
 public enum Role {
-    QUOTE_READER("QUOTES.ROLE_READ"),
-    QUOTE_WRITER("QUOTES.ROLE_WRITE");
 
-    private final String policyName;
+    WRITER(
+            Set.of(
+                    QUOTE_READ,
+                    QUOTE_CREATE
+            )
+    ),
+    READER(Set.of(
+            QUOTE_READ
+    ));
 
-    private static final Map<String, Role> ROLE_MAP;
+    private final Set<Permission> permissions;
 
-    static {
-        Map<String, Role> map = new ConcurrentHashMap<>();
-        for (Role instance : Role.values()) {
-            map.put(instance.getPolicyName(), instance);
-        }
-        ROLE_MAP = Collections.unmodifiableMap(map);
-    }
-    public static Role get(String name) {
-        return ROLE_MAP.get(name);
-    }
 
 }
