@@ -1,0 +1,49 @@
+# curl --location 'http://localhost:8080/api/v1/quotes'
+#--header 'Content-Type: application/json'
+#--header 'Authorization: ••••••'
+#--header 'Cookie: JSESSIONID=639FE305B9D962AAB4DCAFDAFA87587E'
+#--data '{
+#    "quote": "Everything that glitters are not gold"
+#}'
+POST http://localhost:8080/api/v1/quotes
+Authorization: Basic SmFuaW5hQDg5OmtsZW1tZWxMZWJhbA==
+Content-Type: application/json
+
+{
+    "quote": "Everything that glitters are not gold"
+}
+
+###
+
+# curl --location 'http://localhost:8080/api/v1/quotes'
+#--header 'Authorization: ••••••'
+#--header 'Cookie: JSESSIONID=639FE305B9D962AAB4DCAFDAFA87587E'
+GET http://localhost:8080/api/v1/quotes
+Authorization: Basic SmFuaW5hQDg5OmtsZW1tZWxMZWJhbA==
+###
+
+# curl --location 'http://localhost:8080/api/v1/quotes'
+#--header 'Authorization: ••••••'
+#--header 'Cookie: JSESSIONID=639FE305B9D962AAB4DCAFDAFA87587E'
+GET http://localhost:8080/api/v1/quotes
+Authorization: Basic SWNlbWFjaGluYTM6aWNlS2Vrc2U=
+
+###
+
+# curl --location 'http://localhost:8080/api/v1/quotes/authors/Janina@89'
+#--header 'Authorization: ••••••'
+#--header 'Cookie: JSESSIONID=639FE305B9D962AAB4DCAFDAFA87587E'
+GET http://localhost:8080/api/v1/quotes/authors/Janina@89
+Authorization: Basic SWNlbWFjaGluYTM6aWNlS2Vrc2U=
+
+### Should lead tO 403 due to insufficient permission
+
+POST http://localhost:8080/api/v1/quotes
+Authorization: Basic SWNlbWFjaGluYTM6aWNlS2Vrc2U=
+Content-Type: application/json
+
+{
+  "quote": "Just do it"
+}
+
+###

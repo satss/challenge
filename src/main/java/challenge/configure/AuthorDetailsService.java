@@ -20,7 +20,7 @@ public class AuthorDetailsService implements UserDetailsService {
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         Optional<Author> authorOptional = authorRepo.findAuthorsByUsername(username);
         if (authorOptional.isEmpty()) {
-            throw new UsernameNotFoundException(username);
+            throw new UsernameNotFoundException("User not found for name: " + username);
         }
 
         Author author = authorOptional.get();

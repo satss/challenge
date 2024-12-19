@@ -1,64 +1,44 @@
 package challenge.application;
 
-import challenge.quotes.domain.Quote;
+import challenge.quotes.application.QuoteController;
+import challenge.quotes.domain.QuoteDto;
+import challenge.quotes.domain.QuoteService;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
+import org.springframework.boot.test.web.server.LocalServerPort;
+import org.springframework.boot.testcontainers.service.connection.ServiceConnection;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.web.context.WebApplicationContext;
 import org.testcontainers.containers.MySQLContainer;
+import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
 import java.util.HashMap;
 import java.util.Map;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
+import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @Testcontainers
-@SpringBootTest(webEnvironment = RANDOM_PORT)
 class QuoteControllerTest {
 
-    @Autowired
-    private TestRestTemplate restTemplate;
 
-    static MySQLContainer<?> mySQLContainer = new MySQLContainer<>("mysql:8.0");
-
-
-    @DynamicPropertySource
-    static void configureProperties(DynamicPropertyRegistry registry) {
-        registry.add("spring.datasource.url", mySQLContainer::getJdbcUrl);
-        registry.add("spring.datasource.username", mySQLContainer::getUsername);
-        registry.add("spring.datasource.password", mySQLContainer::getPassword);
-        registry.add("spring.jpa.hibernate.ddl-auto",() -> "create");
-
-    }
-
-
-
-
-    @BeforeAll
-    static void beforeAll() {
-        mySQLContainer.start();
-    }
-
-    @AfterAll
-    static void afterAll() {
-        mySQLContainer.stop();
-    }
-
-    @Test
-    public void createQuote() {
-        Map<String, String> headers = new HashMap<>();
-        headers.put("Content-Type", "application/json");
-        headers.put("Authorization", "Basic YWRtaW46YWRtaW4=");
-
-        var  response = restTemplate.postForObject("http://localhost:8080/api/v1/quotes", new Quote(null,"test", "admin"), Quote.class, headers);
-        Assertions.assertThat(response.quote()).isEqualTo("test");
-    }
 
 
 

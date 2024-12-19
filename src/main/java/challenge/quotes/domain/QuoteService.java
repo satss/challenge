@@ -13,20 +13,20 @@ public class QuoteService {
         this.quoteRepo = quoteRepo;
     }
 
-    public Quote addQuote(Quote quote, String username) {
-        var quotes = new QuoteDB(quote.quote(), 1L, username);
+    public QuoteDto addQuote(QuoteDto request, String username) {
+        var quotes = Quote.builder().quote(request.quote()).authorUsername(username).build();
         var savedQuote = quoteRepo.save(quotes);
-        return new Quote(savedQuote.getId(), savedQuote.getQuote(), savedQuote.getAuthorUsername());
+        return new QuoteDto(savedQuote.getId(), savedQuote.getQuote(), savedQuote.getAuthorUsername());
     }
 
 
-    public Page<QuoteDB> getAllQuote(Integer page, Integer size) {
+    public Page<Quote> getAllQuote(Integer page, Integer size) {
         return quoteRepo.findAll(PageRequest.of(page, size));
     }
 
 
-    public Page<QuoteDB> getQuotesByAuthorId(Long authorId, Integer page, Integer size) {
-        return quoteRepo.findAllByAuthorId(authorId, PageRequest.of(page, size));
+    public Page<Quote> getQuotesByAuthorId(String userName, Integer page, Integer size) {
+        return quoteRepo.findAllByAuthorId(userName, PageRequest.of(page, size));
 
     }
 }

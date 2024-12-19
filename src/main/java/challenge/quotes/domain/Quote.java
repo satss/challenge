@@ -1,13 +1,28 @@
 package challenge.quotes.domain;
 
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-public record Quote(@JsonProperty("id") Long id, @JsonProperty("quote") String quote,
-                    @JsonProperty("author_name") String authorName) {
-    public Quote {
-        if (quote == null || quote.isEmpty()) {
-            throw new IllegalArgumentException("Quote cannot be null or empty");
-        }
-    }
+@Entity
+@Table(name = "quotes")
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
+public class Quote {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    private String quote;
+
+
+    @Column(name = "author_user_name")
+    private String authorUsername;
+
+
+
 }
