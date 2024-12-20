@@ -3,6 +3,7 @@ package challenge.quotes.application;
 import challenge.quotes.domain.QuoteDto;
 import challenge.quotes.domain.QuoteService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -21,11 +22,11 @@ public class QuoteController {
     }
 
     @PostMapping()
-    public QuoteDto registerQuotes(@RequestBody QuoteDto request) {
+    public ResponseEntity<QuoteDto> registerQuotes(@RequestBody QuoteDto request) {
         try {
             UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication()
                     .getPrincipal();
-            return quoteService.addQuote(request, userDetails.getUsername());
+            return new ResponseEntity<>(quoteService.addQuote(request, userDetails.getUsername()), HttpStatus.CREATED);
 
         }catch (Exception e){
             throw new IllegalStateException("Could not register new quote");

@@ -16,6 +16,6 @@ The application is a simple CR application for managing quotes, built with Sprin
 
 
 ## Test
- * Tests are not included as of right now
+ * The integration test QuoteControllerTest runs with the help of MYSQL Testcontainers (https://testcontainers.com/). For them to run, you need to have docker installed and running on your machine.
 
 
